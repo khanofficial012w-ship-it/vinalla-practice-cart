@@ -1,4 +1,10 @@
-export function cartItem(cartList: HTMLUListElement) {
+export function cartItem(
+  cartList: HTMLUListElement,
+  tax: HTMLParagraphElement,
+  shipping: HTMLParagraphElement,
+  subtotal: HTMLParagraphElement,
+  total: HTMLParagraphElement,
+) {
   type CartItem = {
     id: number;
     name: string;
@@ -36,6 +42,7 @@ export function cartItem(cartList: HTMLUListElement) {
       li.appendChild(dec);
       cartList.appendChild(li);
     });
+    calculateTotal();
   };
   const increase = (id: number): void => {
     const item = cart.find((c) => c.id === id);
@@ -55,6 +62,20 @@ export function cartItem(cartList: HTMLUListElement) {
   const removeItem = (id: number): void => {
     cart = cart.filter((c) => c.id !== id);
     renderCart();
+  };
+
+  const calculateTotal = (): void => {
+    const subt = cart.reduce((total, value): number => {
+      return total + value.price * value.quantity;
+    }, 0);
+
+    const t = subt * 0.1;
+    const ship = subt > 50000 ? 0 : 1000;
+    const totl = t + ship;
+    subtotal.textContent = String(subt);
+    tax.textContent = String(t);
+    shipping.textContent = String(ship);
+    total.textContent = String(totl);
   };
 
   renderCart();

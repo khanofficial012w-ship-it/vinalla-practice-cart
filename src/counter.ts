@@ -11,20 +11,51 @@ export function cartItem(cartList: HTMLUListElement) {
   ];
 
   const renderCart = () => {
-    if (!cartList) return;
     cartList.innerHTML = "";
+
     cart.forEach((item) => {
       const li = document.createElement("li");
+      const text = document.createElement("span");
 
-      li.innerHTML = `
+      text.textContent = `
       ${item.name} - ${item.price} x ${item.quantity}
-      <button onclick="increase(${item.id})">+</button>
-      <button onclick="decrease(${item.id})">-</button>
-      <button onclick="removeItem(${item.id})">Remove</button>
     `;
 
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Remove";
+      delBtn.addEventListener("click", () => removeItem(item.id));
+      const inc = document.createElement("button");
+      inc.textContent = "+";
+      inc.addEventListener("click", () => increase(item.id));
+      const dec = document.createElement("button");
+      dec.textContent = "-";
+      dec.addEventListener("click", () => decrease(item.id));
+      li.appendChild(text);
+      li.appendChild(delBtn);
+      li.appendChild(inc);
+      li.appendChild(dec);
       cartList.appendChild(li);
     });
   };
+  const increase = (id: number): void => {
+    const item = cart.find((c) => c.id === id);
+    if (!item) return;
+    item.quantity++;
+    renderCart();
+  };
+
+  const decrease = (id: number): void => {
+    const item = cart.find((c) => c.id === id);
+    if (!item) return;
+    if (item.quantity > 1) item.quantity--;
+
+    renderCart();
+  };
+
+  const removeItem = (id: number): void => {
+    cart = cart.filter((c) => c.id !== id);
+    renderCart();
+  };
+
   renderCart();
 }

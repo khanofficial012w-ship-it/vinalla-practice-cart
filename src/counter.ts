@@ -16,6 +16,17 @@ export function cartItem(
     { id: 2, name: "Headphones", price: 5000, quantity: 2 },
   ];
 
+  const storedData = localStorage.getItem("cart");
+
+  if (storedData) {
+    cart = JSON.parse(storedData);
+  }
+
+  const saveToLocal = () => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  };
+
   const renderCart = () => {
     cartList.innerHTML = "";
 
@@ -48,7 +59,7 @@ export function cartItem(
     const item = cart.find((c) => c.id === id);
     if (!item) return;
     item.quantity++;
-    renderCart();
+    saveToLocal();
   };
 
   const decrease = (id: number): void => {
@@ -56,12 +67,12 @@ export function cartItem(
     if (!item) return;
     if (item.quantity > 1) item.quantity--;
 
-    renderCart();
+    saveToLocal();
   };
 
   const removeItem = (id: number): void => {
     cart = cart.filter((c) => c.id !== id);
-    renderCart();
+    saveToLocal();
   };
 
   const calculateTotal = (): void => {
@@ -70,13 +81,14 @@ export function cartItem(
     }, 0);
 
     const t = subt * 0.1;
-    const ship = subt > 50000 ? 0 : 1000;
-    const totl = t + ship;
+    const ship = subt > 50000 || cart.length < 1 ? 0 : 1000;
+    const totl = subt + t + ship;
+
     subtotal.textContent = String(subt);
     tax.textContent = String(t);
     shipping.textContent = String(ship);
     total.textContent = String(totl);
   };
 
-  renderCart();
+  saveToLocal();
 }

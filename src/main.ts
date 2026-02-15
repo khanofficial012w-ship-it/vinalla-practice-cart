@@ -17,4 +17,4 @@ const subtotal = document.querySelector("#subtotal") as HTMLParagraphElement;
 const tax = document.querySelector("#tax") as HTMLParagraphElement;
 const shipping = document.querySelector("#shipping") as HTMLParagraphElement;
 const total = document.querySelector("#total") as HTMLParagraphElement;
-cartItem(list, subtotal, tax, shipping, total);
+cartItem(list, tax, shipping, subtotal, total);
